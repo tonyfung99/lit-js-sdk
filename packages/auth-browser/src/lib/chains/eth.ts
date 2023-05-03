@@ -249,6 +249,16 @@ export const getMustResign = (authSig: AuthSig, resources: any): boolean => {
       );
       mustResign = true;
     }
+
+    const isExpired =
+      parsedSiwe?.expirationTime || '' < new Date().toISOString();
+
+    if (isExpired) {
+      log(
+        'signing auth message because the current time is passed the parsedSig.expirationTime.'
+      );
+      mustResign = true;
+    }
   } catch (e) {
     log('error parsing siwe sig.  making the user sign again: ', e);
     mustResign = true;
